@@ -1,6 +1,9 @@
 import React, { useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
 const markers = [
     { position: [28.6139, 77.209], label: "New Delhi" },
@@ -9,6 +12,12 @@ const markers = [
     { position: [22.5726, 88.3639], label: "Kolkata" },
     { position: [12.9716, 77.5946], label: "Bangalore" },
 ];
+
+const defaultIcon = L.icon({
+    iconUrl: markerIconPng,
+    shadowUrl: markerShadowPng,
+    iconAnchor: [12, 41],
+});
 
 const MapComponent = () => {
     const mapRef = useRef();
@@ -35,6 +44,7 @@ const MapComponent = () => {
             {markers.map((markerData, index) => (
                 <Marker
                     key={index}
+                    icon={defaultIcon}
                     position={markerData.position}
                     eventHandlers={{
                         click: () => {
@@ -44,11 +54,15 @@ const MapComponent = () => {
                             e.target.openPopup();
                         },
                         mouseout: (e) => {
-                            e.target.openPopup();
+                            e.target.openPopup();  
                         },
                     }}
                 >
-                    <Popup>{markerData.label}</Popup>
+                    <Popup
+                        offset={L.point(-1, -35)}  
+                    >
+                        {markerData.label}
+                    </Popup>
                 </Marker>
             ))}
         </MapContainer>
